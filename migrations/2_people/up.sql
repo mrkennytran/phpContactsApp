@@ -8,5 +8,8 @@ CREATE TABLE people (
   notes TINYTEXT NULL,
   favorites BOOL NOT NULL,
   active BOOL NOT NULL,
-  address_id INT NULL
+  address_id INT NOT NULL,
+  FOREIGN KEY (address_id) REFERENCES addresses(addres_id)
 );
+
+INSERT INTO people (first_name,last_name,nickname,company,website,notes,favorites,active,address_id) VALUES ('test','guy','testy','test inc','test.com','this is a test',true,true,1);

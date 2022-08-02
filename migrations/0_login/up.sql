@@ -1,0 +1,6 @@
+CREATE TABLE login (
+  user_id int(11) AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  username TINYTEXT NOT NULL,
+  email TINYTEXT NOT NULL,
+  password LONGTEXT NOT NULL
+);

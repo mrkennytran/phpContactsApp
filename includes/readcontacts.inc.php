@@ -4,11 +4,28 @@ require 'dbh.inc.php'; //will this allow variables declared from other php files
 
 $sql = 'SELECT * FROM addresses';
 
+//set query and retrieve results
 $result = mysqli_query($conn, $sql);
 
-$people = mysqli_fetch_all($result, MYSQLI_ASSOC);
+//fetch rows as an array 
+$addresses = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-print_r($people);
+//flush results to free memory
+mysqli_free_result($result);
+
+mysqli_close($conn);
+
+
+echo $addresses[0]['address_id'];
+//print_r($addresses[0]);
+
+print_r($addresses[0]['address_id']);
+
+/*
+foreach($addresses as $entry){
+    echo $entry['address_id'];
+}
+*/
 
 /*
 mysql_select_db('contacts_db');

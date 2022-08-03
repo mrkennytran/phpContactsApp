@@ -10,12 +10,14 @@
                 <?php //include('includes/readcontacts.inc.php');
                     include 'includes/readcontacts.inc.php';
 
+                    /*
                     foreach($addresses as $address){
                         echo address;
                     }
-
-
+                    */ 
                 ?>
+
+                <div>hello</div>
 
 
             </section>

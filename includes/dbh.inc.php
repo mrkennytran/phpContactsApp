@@ -1,12 +1,15 @@
 <?php
 
-$servername = "containers-us-west-90.railway.app"; //name servername if using xamp or get server name on dashboard if online hosting 
-$dBUsername = "root";
-$dBPassword = "vBhkzPmZNKlmq2EftXY2";
-$dBName = "railway";
-$port = "6169";
+$server_name = "astamps78515.ipagemysql.com";
+$db_username = "skyler_favors";
+$db_password = "Favors721!";
+$db_name = "skyler_favors";
 
-$conn = mysqli_connect($servername, $dBUsername, $dBPassword, $dBName, $port);
+echo 'here';
+
+$conn = mysqli_connect($server_name, $db_username, $db_password, $db_name);
+
+echo 'after';
 
 if(!$conn){
     die("Connection failed: ".mysqli_connect_error());

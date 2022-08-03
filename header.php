@@ -27,15 +27,15 @@
 
                 <div class="header-login">
                 <?php 
-                    if(isset($_SESSION['userId'])){
+                    if(isset($_SESSION['user_id'])){
                         echo '<form action="includes/logout.inc.php" method="post">
                         <button type="submit" name="logout-submit">Logout</button>
                         </form>';
                     } else {
                         echo '<form action="includes/login.inc.php" method="post">
                         <!--CREATE AN INCLUDES FOLDER IN MAIN LOGIN PROJECT FOLDER-->
-                        <input type="text" name="mailuid" placeholder="UserName/E-mail...">
-                        <input type="password" name="pwd" placeholder="Password...">
+                        <input type="text" name="user" placeholder="UserName/E-mail...">
+                        <input type="password" name="pass" placeholder="Password...">
                         <button type="submit" name="login-submit">Login</button>
                     </form>';
                     }

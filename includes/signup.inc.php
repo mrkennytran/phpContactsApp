@@ -1,70 +1,61 @@
-<?php 
-if(isset($_POST['signup-submit'])) { //*** 37:00
-    
-    require 'dbh.inc.php';
+<?php
+if (isset($_POST['signup-submit'])) {
+  require 'dbh.inc.php';
 
-    $username = $_POST['uid'];
-    $email = $_POST['mail'];
-    $password = $_POST['pwd'];
-    $passwordRepeat = $_POST['pwd-repeat'];
+  $username = $_POST['user'];
+  $email = $_POST['email'];
+  $password = $_POST['pass'];
+  $password_repeat = $_POST['pass-repeat'];
 
-    //Error handler conditions 
-if (empty($username) || empty($email) || empty($password) || empty($passwordRepeat) ) {
-    header("Location: ../signup.php?error=emptyfields&uid=".$username."&mail=".$email);
+  if (empty($username) || empty($email) || empty($password) || empty($password_repeat)) {
+    header("Location: ../signup.php?error=emptyfields&user=".$username."&email=".$email);
     exit();
-} else if (!filter_var($email, FILTER_VALIDATE_EMAIL) && !preg_match("/^[a-zA-Z0-9]*$/", $username)) {
-    //If none of the info user enters is correct 
-    header("Location: ../signup.php?error=invalidemail&uid");
+  } else if (!filter_var($email, FILTER_VALIDATE_EMAIL) && !preg_match("/^[a-zA-Z0-9]*$/", $username)) {
+    header("Location: ../signup.php?error=invaliduseremail");
     exit();
-} else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    header("Location: ../signup.php?error=invalidemail&uid=".$username);
+  } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    header("Location: ../signup.php?error=invalidemail&user=".$username);
     exit();
-} else if (!preg_match("/^[a-zA-Z0-9]*$/", $username)) { //pregmatic 
-    header("Location: ../signup.php?error=invaliduid&mail=".$email);
+  } else if (!preg_match("/^[a-zA-Z0-9]*$/", $username)) {
+    header("Location: ../signup.php?error=invaliduser&email=".$email);
     exit();
-} else if ($password !== $passwordRepeat){
-    //Password entry does not match password repeat 
-    header("Location: ../signup.php?error=passwordcheck&uid=".username."&mail=".$email); //*** */
+  } else if ($password !== $password_repeat) {
+    header("Location: ../signup.php?error=passwordcheck&user=".$username."&email=".$email);
     exit();
-} else {
-    //Using a username that already exists/taken by someone else in the database
-    $sql = "SELECT uidUsers FROM users WHERE uidUsers=?"; //using prepared statements - prevent users from corrupting the db 54:00 ? = placeholder for protection
+  } else {
+    $sql = "SELECT user FROM users WHERE user=?;";
     $stmt = mysqli_stmt_init($conn);
-
-    if(!mysqli_stmt_prepare($stmt, $sql)){
-        header("Location: ../signup.php?error=sqlerror");
-        exit();
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+      header("Location: ../signup.php?error=sqlerror");
+      exit();
     } else {
-        mysqli_stmt_bind_param($stmt, "s", $username);
-        mysqli_stmt_execute($stmt); //run stmt inside db
-        mysqli_stmt_store_result($stmt); //return results from db for any matches
-        $resultCheck = mysqli_stmt_num_rows($stmt); //*** */
-        if($resultCheck > 0){
-            header("Location: ../signup.php?error=usertaken&mail=".$email);
-            exit();
+      // s == string, i == int, b == blob
+      mysqli_stmt_bind_param($stmt, "s", $username);
+      mysqli_stmt_execute($stmt);
+      mysqli_stmt_store_result($stmt);
+      $result_check = mysqli_stmt_num_rows($stmt);
+      if ($result_check > 0) {
+        header("Location: ../signup.php?error=usertaken&email=".$email);
+        exit();
+      } else {
+        $sql = "INSERT INTO users (user, email, pass) VALUES (?, ?, ?)";
+        $stmt = mysqli_stmt_init($conn);
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+          header("Location: ../signup.php?error=sqlerror");
+          exit();
         } else {
-            $sql = "INSERT INTO users (uidUsers, emailUsers, pwdUsers) VALUES (?, ?, ?)";
-            $stmt = mysqli_stmt_init($conn);
-
-            if(!mysqli_stmt_prepare($stmt, $sql)){
-                header("Location: ../signup.php?error=sqlerror");
-                exit();
-            } else {
-                $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
-
-                mysqli_stmt_bind_param($stmt, "sss", $username, $email, $hashedPwd); //switched $password to $hashedPwd for user pw protection                 
-                mysqli_stmt_execute($stmt); //run stmt inside db
-                header("Location: ../signup.php?signup=success");
-                exit();            
-            }
+          $hashed = password_hash($password, PASSWORD_DEFAULT);
+          mysqli_stmt_bind_param($stmt, "sss", $username, $email, $hashed);
+          mysqli_stmt_execute($stmt);
+          header("Location: ../signup.php?signup=success");
+          exit();
         }
+      }
     }
-
-}
-mysqli_stmt_close($stmt); //closing statement
-mysqli_close($conn); //close connection 
-
+    mysqli_stmt_close($stmt);
+  }
+  mysqli_close($conn);
 } else {
-    header("Location: ../signup.php");
-    exit();     
+  header("Location: ../signup.php");
+  exit();
 }

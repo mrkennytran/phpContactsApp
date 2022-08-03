@@ -22,7 +22,7 @@
                     <li><a href="index.php">Home</a></li>
                     <li><a href="#">Portfolio</a></li>
                     <li><a href="#">About Me</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="readcontacts.php">Contact</a></li>
                 </ul>
                 </nav>
 
